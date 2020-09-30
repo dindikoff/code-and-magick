@@ -47,6 +47,11 @@ const FIREBALL_COLORS = [
   `#e6e848`
 ];
 
+const KEYS = {
+  'ESCAPE': `Escape`,
+  'ENTER': `Enter`
+};
+
 const WIZARD_COUNT = 4;
 const setupWizard = document.querySelector(`.setup-wizard`);
 const coatColorInput = document.querySelector(`[name="coat-color"]`);
@@ -63,6 +68,8 @@ const similarWizardTemplate = document.querySelector(`#similar-wizard-template`)
   .content
   .querySelector(`.setup-similar-item`);
 
+document.querySelector(`.setup-similar`).classList.remove(`hidden`);
+
 const getRandom = (min = 0, max = 100) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -71,17 +78,13 @@ const getRandomElement = (arr) => {
   return arr[getRandom(0, arr.length - 1)];
 };
 
-const generateWizards = (wizardsCount) => {
-  const wizardList = [];
-  for (let i = 0; i < wizardsCount; i++) {
-    wizardList.push({
-      'name': `${getRandomElement(NAMES)} ${getRandomElement(LAST_NAMES)}`,
-      'coatColor': `${getRandomElement(COAT_COLORS)}`,
-      'eyesColor': `${getRandomElement(EYES_COLORS)}`,
-    });
-  }
-  return wizardList;
-};
+const generateWizards = (wizardsCount) => new Array(wizardsCount).fill(``).map(() => ({
+  'name': `${getRandomElement(NAMES)} ${getRandomElement(LAST_NAMES)}`,
+  'coatColor': `${getRandomElement(COAT_COLORS)}`,
+  'eyesColor': `${getRandomElement(EYES_COLORS)}`,
+}));
+
+const wizardsList = generateWizards(WIZARD_COUNT);
 
 const renderWizards = (wizards) => {
   const wizardElement = similarWizardTemplate.cloneNode(true);
@@ -93,22 +96,21 @@ const renderWizards = (wizards) => {
   return wizardElement;
 };
 
-const showWizards = (wizardsList) => {
+const showWizards = (wizardsArray) => {
   const fragment = document.createDocumentFragment();
 
-  for (let wizard of wizardsList) {
+  for (let wizard of wizardsArray) {
     fragment.appendChild(renderWizards(wizard));
   }
   return fragment;
 };
 
-const wizardsList = generateWizards(WIZARD_COUNT);
 similarListElement.appendChild(showWizards(wizardsList));
 
 // Modal
 
 const onModalEscPress = function (evt) {
-  if (evt.key === `Escape` && evt.target !== userNameInput) {
+  if (evt.key === KEYS.ESCAPE && evt.target !== userNameInput) {
     evt.preventDefault();
     closeModal();
   }
@@ -125,12 +127,10 @@ const closeModal = function () {
   document.removeEventListener(`keydown`, onModalEscPress);
 };
 
-userDialogOpen.addEventListener(`click`, function () {
-  openModal();
-});
+userDialogOpen.addEventListener(`click`, openModal);
 
 userDialogOpen.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
+  if (evt.key === KEYS.ENTER) {
     openModal();
   }
 });
@@ -140,7 +140,7 @@ userDialogClose.addEventListener(`click`, function () {
 });
 
 userDialogClose.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
+  if (evt.key === KEYS.ENTER) {
     closeModal();
   }
 });
@@ -176,10 +176,5 @@ const onChangeFireballColor = (evt) => {
   }
 };
 
-setupWizard.addEventListener(`click`, (evt) => {
-  onChangeWizardColor(evt);
-});
-
-setupFireBall.addEventListener(`click`, (evt) => {
-  onChangeFireballColor(evt);
-});
+setupWizard.addEventListener(`click`, onChangeWizardColor);
+setupFireBall.addEventListener(`click`, onChangeFireballColor);
