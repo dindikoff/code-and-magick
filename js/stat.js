@@ -11,17 +11,6 @@
   const BAR_WIDTH = 40;
   const BAR_HEIGHT = 150;
 
-  const getMaxElement = function (arr) {
-    let maxElement = arr[0];
-
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i] > maxElement) {
-        maxElement = arr[i];
-      }
-    }
-
-    return maxElement;
-  };
 
   const renderCloud = function (ctx, x, y, color) {
     ctx.fillStyle = color;
@@ -56,7 +45,7 @@
         CLOUD_Y + GAP * 5
     );
 
-    const maxTime = getMaxElement(times);
+    const maxTime = window.utils.getMaxElement(times);
     for (let i = 0; i < players.length; i++) {
       ctx.fillStyle = `#000`;
       ctx.fillText(

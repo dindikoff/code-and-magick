@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  const KEYS = {
+  const Key = {
     'ESCAPE': `Escape`,
     'ENTER': `Enter`
   };
@@ -14,10 +14,23 @@
     return arr[getRandom(0, arr.length - 1)];
   };
 
+  const getMaxElement = (arr) => {
+    let maxElement = arr[0];
+
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] > maxElement) {
+        maxElement = arr[i];
+      }
+    }
+
+    return maxElement;
+  };
+
   window.utils = {
-    KEYS,
+    Key,
     getRandom,
-    getRandomElement
+    getRandomElement,
+    getMaxElement
   };
 
 })();

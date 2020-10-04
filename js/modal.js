@@ -13,7 +13,7 @@
   };
 
   const onModalEscPress = function (evt) {
-    if (evt.key === window.utils.KEYS.ESCAPE && evt.target !== userNameInput) {
+    if (evt.key === window.utils.Key.ESCAPE && evt.target !== userNameInput) {
       evt.preventDefault();
       closeModal();
     }
@@ -35,7 +35,7 @@
   userDialogOpen.addEventListener(`click`, openModal);
 
   userDialogOpen.addEventListener(`keydown`, function (evt) {
-    if (evt.key === window.utils.KEYS.ENTER) {
+    if (evt.key === window.utils.Key.ENTER) {
       openModal();
     }
   });
@@ -45,7 +45,7 @@
   });
 
   userDialogClose.addEventListener(`keydown`, function (evt) {
-    if (evt.key === window.utils.KEYS.ENTER) {
+    if (evt.key === window.utils.Key.ENTER) {
       closeModal();
     }
   });

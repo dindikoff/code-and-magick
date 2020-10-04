@@ -50,14 +50,18 @@
 
   const WIZARD_COUNT = 4;
 
+  const generateWizards = (wizardsCount) => new Array(wizardsCount).fill(``).map(() => ({
+    'name': `${window.utils.getRandomElement(NAMES)} ${window.utils.getRandomElement(LAST_NAMES)}`,
+    'coatColor': `${window.utils.getRandomElement(COAT_COLORS)}`,
+    'eyesColor': `${window.utils.getRandomElement(EYES_COLORS)}`,
+  }));
+
   window.data = {
-    WIZARD_COUNT,
     FIREBALL_COLORS,
     EYES_COLORS,
     COAT_COLORS,
-    LAST_NAMES,
-    NAMES
+    WIZARD_COUNT,
+    generateWizards
   };
-
 
 })();
