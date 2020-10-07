@@ -6,6 +6,7 @@
   const userDialogOpen = document.querySelector(`.setup-open`);
   const userDialogClose = userDialog.querySelector(`.setup-close`);
   const userNameInput = userDialog.querySelector(`.setup-user-name`);
+  const form = userDialog.querySelector(`.setup-wizard-form`);
 
   const MODAL_DEFAULT_POSITION = {
     'LEFT': 722,
@@ -50,5 +51,29 @@
     }
   });
 
+  const loadHandler = () => {
+    userDialog.classList.add(`hidden`);
+  };
+
+  const errorHandler = (errorMessage) => {
+    const node = document.createElement(`div`);
+    node.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: red;`;
+    node.style.position = `absolute`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = `30px`;
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement(`afterbegin`, node);
+  };
+
+  form.addEventListener(`submit`, (evt) => {
+    window.backend.save(new FormData(form), loadHandler, errorHandler);
+    evt.preventDefault();
+  });
+
+  window.modal = {
+    'error': errorHandler
+  };
 
 })();

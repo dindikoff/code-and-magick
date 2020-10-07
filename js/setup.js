@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  const MAX_SIMILAR_WIZARD_COUNT = 4;
   const similarListElement = document.querySelector(`.setup-similar-list`);
   const similarWizardTemplate = document.querySelector(`#similar-wizard-template`)
     .content
@@ -8,27 +9,24 @@
 
   document.querySelector(`.setup-similar`).classList.remove(`hidden`);
 
-  const wizardsList = window.data.generateWizards(window.data.WIZARD_COUNT);
-
   const renderWizards = (wizards) => {
     const wizardElement = similarWizardTemplate.cloneNode(true);
 
     wizardElement.querySelector(`.setup-similar-label`).textContent = wizards.name;
-    wizardElement.querySelector(`.wizard-coat`).style.fill = wizards.coatColor;
-    wizardElement.querySelector(`.wizard-eyes`).style.fill = wizards.eyesColor;
+    wizardElement.querySelector(`.wizard-coat`).style.fill = wizards.colorCoat;
+    wizardElement.querySelector(`.wizard-eyes`).style.fill = wizards.colorEyes;
 
     return wizardElement;
   };
 
-  const showWizards = (wizardsArray) => {
+  const successHandler = (wizards) => {
     const fragment = document.createDocumentFragment();
 
-    for (let wizard of wizardsArray) {
-      fragment.appendChild(renderWizards(wizard));
+    for (let i = 0; i < MAX_SIMILAR_WIZARD_COUNT; i++) {
+      fragment.appendChild(renderWizards(wizards[i]));
     }
-    return fragment;
+    similarListElement.appendChild(fragment);
   };
 
-  similarListElement.appendChild(showWizards(wizardsList));
-
+  window.backend.load(successHandler, window.modal.error);
 })();
