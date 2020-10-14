@@ -1,32 +1,73 @@
 'use strict';
 
 (function () {
-  const MAX_SIMILAR_WIZARD_COUNT = 4;
-  const similarListElement = document.querySelector(`.setup-similar-list`);
-  const similarWizardTemplate = document.querySelector(`#similar-wizard-template`)
-    .content
-    .querySelector(`.setup-similar-item`);
 
-  document.querySelector(`.setup-similar`).classList.remove(`hidden`);
+  let coatColor = `rgb(101, 137, 164)`;
+  let eyesColor = `black`;
+  let fireballColor = `ee4830`;
+  let wizards = [];
 
-  const renderWizards = (wizards) => {
-    const wizardElement = similarWizardTemplate.cloneNode(true);
+  const getRank = (wizard) => {
+    let rank = 0;
 
-    wizardElement.querySelector(`.setup-similar-label`).textContent = wizards.name;
-    wizardElement.querySelector(`.wizard-coat`).style.fill = wizards.colorCoat;
-    wizardElement.querySelector(`.wizard-eyes`).style.fill = wizards.colorEyes;
-
-    return wizardElement;
-  };
-
-  const successHandler = (wizards) => {
-    const fragment = document.createDocumentFragment();
-
-    for (let i = 0; i < MAX_SIMILAR_WIZARD_COUNT; i++) {
-      fragment.appendChild(renderWizards(wizards[i]));
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
     }
-    similarListElement.appendChild(fragment);
+
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
+    }
+
+    if (wizard.colorFireball === fireballColor) {
+      rank += 1;
+    }
+
+    return rank;
   };
 
-  window.backend.load(successHandler, window.modal.error);
+  const namesComparator = (left, right) => {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  const updateWizards = function () {
+    window.render(wizards.sort((left, right) => {
+      let rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  };
+
+  window.wizard.setCoatChangeHandler(window.debounce((color) => {
+    coatColor = color;
+    updateWizards();
+  }));
+
+  window.wizard.setEyesChangeHandler(window.debounce((color) => {
+    eyesColor = color;
+    updateWizards();
+  }));
+
+  window.wizard.setFireBallChangeHandler(window.debounce((color) => {
+    fireballColor = color;
+    updateWizards();
+  }));
+
+  const successHandler = (data) => {
+    wizards = data;
+    updateWizards();
+  };
+
+  const errorHandler = (errorMessage) => {
+    window.utils.createErrorMessage(errorMessage);
+  };
+
+  window.backend.load(successHandler, errorHandler);
 })();
