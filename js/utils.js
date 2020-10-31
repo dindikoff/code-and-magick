@@ -38,12 +38,21 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
+  const matches = (endingsArr, fileName) => {
+    const result = endingsArr.some((ending) => {
+      return fileName.endsWith(ending);
+    });
+
+    return result;
+  };
+
   window.utils = {
     Key,
     getRandom,
     getRandomElement,
     getMaxElement,
-    createErrorMessage
+    createErrorMessage,
+    matches
   };
 
 })();

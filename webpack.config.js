@@ -12,6 +12,7 @@ module.exports = {
     './js/move.js',
     './js/wizard.js',
     './js/setup.js',
+    './js/avatar.js',
     './js/game.js'
   ],
 
